@@ -44,7 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertQuestion" parameterType="Question" useGeneratedKeys="true" keyProperty="id">
-        insert into question
+        INSERT INTO question
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="content != null and content != ''">content,</if>
             <if test="optionA != null and optionA != ''">option_a,</if>
@@ -53,11 +53,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="optionD != null and optionD != ''">option_d,</if>
             <if test="correctAnswer != null and correctAnswer != ''">correct_answer,</if>
             <if test="type != null">type,</if>
-            <if test="score != null">score,</if>
+            <if test="score != null">score,</if> <!-- 允许 score 为空 -->
             <if test="knowledgeId != null">knowledge_id,</if>
             <if test="createdAt != null">created_at,</if>
-         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
             <if test="content != null and content != ''">#{content},</if>
             <if test="optionA != null and optionA != ''">#{optionA},</if>
             <if test="optionB != null and optionB != ''">#{optionB},</if>
@@ -65,10 +65,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="optionD != null and optionD != ''">#{optionD},</if>
             <if test="correctAnswer != null and correctAnswer != ''">#{correctAnswer},</if>
             <if test="type != null">#{type},</if>
-            <if test="score != null">#{score},</if>
+            <if test="score != null">#{score},</if> <!-- 允许 score 为空 -->
             <if test="knowledgeId != null">#{knowledgeId},</if>
             <if test="createdAt != null">#{createdAt},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateQuestion" parameterType="Question">
@@ -98,4 +98,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO question (
+        content,
+        option_a,
+        option_b,
+        option_c,
+        option_d,
+        correct_answer,
+        type,
+        score,
+        knowledge_id,
+        created_at
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.content},
+            #{item.optionA},
+            #{item.optionB},
+            #{item.optionC},
+            #{item.optionD},
+            #{item.correctAnswer},
+            #{item.type},
+            #{item.score},
+            #{item.knowledgeId},
+            #{item.createdAt}
+            )
+        </foreach>
+    </insert>
 </mapper>

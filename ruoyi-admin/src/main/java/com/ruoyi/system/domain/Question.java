@@ -22,7 +22,7 @@ public class Question extends BaseEntity
     private Long id;
 
     /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "内容")
     private String content;
 
     /** 选项A */
@@ -42,23 +42,23 @@ public class Question extends BaseEntity
     private String optionD;
 
     /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "正确答案")
     private String correctAnswer;
 
     /** 0-单选 1-多选 2-判断 */
-    @Excel(name = "0-单选 1-多选 2-判断")
+    @Excel(name = "类型")
     private Long type;
 
     /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "分值")
     private BigDecimal score;
 
     /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "知识点")
     private Long knowledgeId;
 
     /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "创建时间")
     private Date createdAt;
 
     public void setId(Long id) 

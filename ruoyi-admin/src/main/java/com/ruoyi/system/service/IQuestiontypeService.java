@@ -1,16 +1,15 @@
 package com.ruoyi.system.service;
 
 import java.util.List;
-import com.ruoyi.system.domain.Question;
-import org.springframework.web.multipart.MultipartFile;
+import com.ruoyi.system.domain.Questiontype;
 
 /**
  * 【请填写功能名称】Service接口
  * 
  * @author ruoyi
- * @date 2025-03-17
+ * @date 2025-03-19
  */
-public interface IQuestionService 
+public interface IQuestiontypeService 
 {
     /**
      * 查询【请填写功能名称】
@@ -18,31 +17,31 @@ public interface IQuestionService
      * @param id 【请填写功能名称】主键
      * @return 【请填写功能名称】
      */
-    public Question selectQuestionById(Long id);
+    public Questiontype selectQuestiontypeById(Long id);
 
     /**
      * 查询【请填写功能名称】列表
      * 
-     * @param question 【请填写功能名称】
+     * @param questiontype 【请填写功能名称】
      * @return 【请填写功能名称】集合
      */
-    public List<Question> selectQuestionList(Question question);
+    public List<Questiontype> selectQuestiontypeList(Questiontype questiontype);
 
     /**
      * 新增【请填写功能名称】
      * 
-     * @param question 【请填写功能名称】
+     * @param questiontype 【请填写功能名称】
      * @return 结果
      */
-    public int insertQuestion(Question question);
+    public int insertQuestiontype(Questiontype questiontype);
 
     /**
      * 修改【请填写功能名称】
      * 
-     * @param question 【请填写功能名称】
+     * @param questiontype 【请填写功能名称】
      * @return 结果
      */
-    public int updateQuestion(Question question);
+    public int updateQuestiontype(Questiontype questiontype);
 
     /**
      * 批量删除【请填写功能名称】
@@ -50,7 +49,7 @@ public interface IQuestionService
      * @param ids 需要删除的【请填写功能名称】主键集合
      * @return 结果
      */
-    public int deleteQuestionByIds(Long[] ids);
+    public int deleteQuestiontypeByIds(Long[] ids);
 
     /**
      * 删除【请填写功能名称】信息
@@ -58,7 +57,5 @@ public interface IQuestionService
      * @param id 【请填写功能名称】主键
      * @return 结果
      */
-    public int deleteQuestionById(Long id);
-
-    public void importQuestions(MultipartFile file, Long knowledgeId,Long type);
+    public int deleteQuestiontypeById(Long id);
 }
