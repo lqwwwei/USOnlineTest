@@ -1,6 +1,8 @@
 package com.ruoyi.system.controller;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,7 +118,12 @@ public class QuestionController extends BaseController
             return error("导入失败：" + e.getMessage());
         }
     }
-
+    @PostMapping("/importTemplate")
+    public void importTemplate(HttpServletResponse response)
+    {
+        ExcelUtil<Question> util = new ExcelUtil<Question>(Question.class);
+        util.importTemplateExcel(response, "试题数据");
+    }
 
 
 
