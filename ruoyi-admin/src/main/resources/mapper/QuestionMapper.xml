@@ -13,13 +13,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="optionD"    column="option_d"    />
         <result property="correctAnswer"    column="correct_answer"    />
         <result property="type"    column="type"    />
-        <result property="score"    column="score"    />
         <result property="knowledgeId"    column="knowledge_id"    />
         <result property="createdAt"    column="created_at"    />
     </resultMap>
 
     <sql id="selectQuestionVo">
-        select id, content, option_a, option_b, option_c, option_d, correct_answer, type, score, knowledge_id, created_at from question
+        select id, content, option_a, option_b, option_c, option_d, correct_answer, type, knowledge_id, created_at from question
     </sql>
 
     <select id="selectQuestionList" parameterType="Question" resultMap="QuestionResult">
@@ -32,7 +31,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="optionD != null  and optionD != ''"> and option_d = #{optionD}</if>
             <if test="correctAnswer != null  and correctAnswer != ''"> and correct_answer = #{correctAnswer}</if>
             <if test="type != null "> and type = #{type}</if>
-            <if test="score != null "> and score = #{score}</if>
             <if test="knowledgeId != null "> and knowledge_id = #{knowledgeId}</if>
             <if test="createdAt != null "> and created_at = #{createdAt}</if>
         </where>
@@ -53,7 +51,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="optionD != null and optionD != ''">option_d,</if>
             <if test="correctAnswer != null and correctAnswer != ''">correct_answer,</if>
             <if test="type != null">type,</if>
-            <if test="score != null">score,</if> <!-- 允许 score 为空 -->
             <if test="knowledgeId != null">knowledge_id,</if>
             <if test="createdAt != null">created_at,</if>
         </trim>
@@ -65,7 +62,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="optionD != null and optionD != ''">#{optionD},</if>
             <if test="correctAnswer != null and correctAnswer != ''">#{correctAnswer},</if>
             <if test="type != null">#{type},</if>
-            <if test="score != null">#{score},</if> <!-- 允许 score 为空 -->
             <if test="knowledgeId != null">#{knowledgeId},</if>
             <if test="createdAt != null">#{createdAt},</if>
         </trim>
@@ -81,7 +77,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="optionD != null and optionD != ''">option_d = #{optionD},</if>
             <if test="correctAnswer != null and correctAnswer != ''">correct_answer = #{correctAnswer},</if>
             <if test="type != null">type = #{type},</if>
-            <if test="score != null">score = #{score},</if>
             <if test="knowledgeId != null">knowledge_id = #{knowledgeId},</if>
             <if test="createdAt != null">created_at = #{createdAt},</if>
         </trim>
@@ -108,7 +103,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         option_d,
         correct_answer,
         type,
-        score,
         knowledge_id,
         created_at
         ) VALUES
@@ -121,10 +115,41 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{item.optionD},
             #{item.correctAnswer},
             #{item.type},
-            #{item.score},
             #{item.knowledgeId},
             #{item.createdAt}
             )
         </foreach>
     </insert>
+    <select id="selectByTypeAndKnowledge" parameterType="map" resultMap="QuestionResult">
+        SELECT
+        id, content, option_a, option_b, option_c, option_d, correct_answer, type, knowledge_id, created_at
+        FROM
+        question
+        WHERE
+        type = #{questionType}
+        AND
+        knowledge_id IN
+        <foreach item="knowledgeId" index="index" collection="knowledgeIds" open="(" separator="," close=")">
+            #{knowledgeId}
+        </foreach>
+    </select>
+    <select id="selectQuestionsByIds" resultMap="QuestionResult">
+        SELECT
+        id,
+        content,
+        option_a,
+        option_b,
+        option_c,
+        option_d,
+        correct_answer,
+        type,
+        knowledge_id,
+        created_at
+        FROM question
+        WHERE id IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        ORDER BY id ASC <!-- 可选：按ID排序 -->
+    </select>
 </mapper>

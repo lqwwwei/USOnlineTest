@@ -125,6 +125,8 @@ public class QuestionController extends BaseController
         util.importTemplateExcel(response, "试题数据");
     }
 
-
-
+    @PostMapping("/listByIds")
+    public List<Question> listQuestionsByIds(@RequestBody List<Long> ids) {
+        return questionService.listQuestionsByIds(ids);
+    }
 }

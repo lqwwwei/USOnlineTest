@@ -2,7 +2,7 @@ package com.ruoyi.system.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -49,9 +49,6 @@ public class Question extends BaseEntity
     @Excel(name = "类型")
     private Long type;
 
-    /** $column.columnComment */
-    @Excel(name = "分值")
-    private BigDecimal score;
 
     /** $column.columnComment */
     @Excel(name = "知识点")
@@ -66,7 +63,7 @@ public class Question extends BaseEntity
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
@@ -141,16 +138,6 @@ public class Question extends BaseEntity
         return type;
     }
 
-    public void setScore(BigDecimal score) 
-    {
-        this.score = score;
-    }
-
-    public BigDecimal getScore() 
-    {
-        return score;
-    }
-
     public void setKnowledgeId(Long knowledgeId) 
     {
         this.knowledgeId = knowledgeId;
@@ -182,7 +169,6 @@ public class Question extends BaseEntity
             .append("optionD", getOptionD())
             .append("correctAnswer", getCorrectAnswer())
             .append("type", getType())
-            .append("score", getScore())
             .append("knowledgeId", getKnowledgeId())
             .append("createdAt", getCreatedAt())
             .toString();

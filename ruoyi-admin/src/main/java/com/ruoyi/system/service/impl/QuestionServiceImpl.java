@@ -110,7 +110,7 @@ public class QuestionServiceImpl implements IQuestionService
                 if (question.getContent() == null || question.getOptionA() == null ||
                         question.getOptionB() == null || question.getOptionC() == null ||
                         question.getOptionD() == null || question.getCorrectAnswer() == null ||
-                        question.getType() == null || question.getScore() == null) {
+                        question.getType() == null) {
                     throw new RuntimeException("Excel 文件数据不完整");
                 }
             }
@@ -130,4 +130,10 @@ public class QuestionServiceImpl implements IQuestionService
             throw new RuntimeException("导入失败：" + e.getMessage(), e);
         }
     }
+
+    @Override
+    public List<Question> listQuestionsByIds(List<Long> ids) {
+        return questionMapper.selectQuestionsByIds(ids);
+    }
+
 }
