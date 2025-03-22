@@ -126,7 +126,15 @@ public class QuestionController extends BaseController
     }
 
     @PostMapping("/listByIds")
-    public List<Question> listQuestionsByIds(@RequestBody List<Long> ids) {
-        return questionService.listQuestionsByIds(ids);
+    public AjaxResult listQuestionsByIds(@RequestBody List<Long> ids) {
+        try {
+            // 调用服务层方法，获取试题列表
+            List<Question> questions = questionService.listQuestionsByIds(ids);
+            // 返回成功响应，并将试题列表作为数据
+            return AjaxResult.success("查询成功", questions);
+        } catch (Exception e) {
+            // 返回失败响应，并包含错误信息
+            return AjaxResult.error("查询失败：" + e.getMessage());
+        }
     }
 }
