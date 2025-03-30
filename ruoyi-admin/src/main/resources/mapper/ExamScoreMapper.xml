@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ExamScoreMapper">
+    
+    <resultMap type="ExamScore" id="ExamScoreResult">
+        <result property="id"    column="id"    />
+        <result property="examId"    column="exam_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="questionId"    column="question_id"    />
+        <result property="userAnswer"    column="user_answer"    />
+        <result property="score"    column="score"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectExamScoreVo">
+        select id, exam_id, user_id, question_id, user_answer, score, create_time from exam_score
+    </sql>
+
+    <select id="selectExamScoreList" parameterType="ExamScore" resultMap="ExamScoreResult">
+        <include refid="selectExamScoreVo"/>
+        <where>  
+            <if test="examId != null "> and exam_id = #{examId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="questionId != null "> and question_id = #{questionId}</if>
+            <if test="userAnswer != null  and userAnswer != ''"> and user_answer = #{userAnswer}</if>
+            <if test="score != null "> and score = #{score}</if>
+        </where>
+    </select>
+    
+    <select id="selectExamScoreById" parameterType="Long" resultMap="ExamScoreResult">
+        <include refid="selectExamScoreVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertExamScore" parameterType="ExamScore" useGeneratedKeys="true" keyProperty="id">
+        insert into exam_score
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="examId != null">exam_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="questionId != null">question_id,</if>
+            <if test="userAnswer != null">user_answer,</if>
+            <if test="score != null">score,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="examId != null">#{examId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="questionId != null">#{questionId},</if>
+            <if test="userAnswer != null">#{userAnswer},</if>
+            <if test="score != null">#{score},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <select id="selectByUserAndQuestion" resultType="ExamScore">
+        SELECT * FROM exam_score
+        WHERE exam_id = #{examId}
+        AND user_id = #{userId}
+        AND question_id = #{questionId}
+        LIMIT 1
+    </select>
+
+    <update id="updateExamScore" parameterType="ExamScore">
+        update exam_score
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="examId != null">exam_id = #{examId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="questionId != null">question_id = #{questionId},</if>
+            <if test="userAnswer != null">user_answer = #{userAnswer},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteExamScoreById" parameterType="Long">
+        delete from exam_score where id = #{id}
+    </delete>
+
+    <delete id="deleteExamScoreByIds" parameterType="String">
+        delete from exam_score where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

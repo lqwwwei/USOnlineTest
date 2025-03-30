@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ExamsMapper">
+    
+    <resultMap type="Exams" id="ExamsResult">
+        <result property="examId"    column="exam_id"    />
+        <result property="examName"    column="exam_name"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="paperId"    column="paper_id"    />
+        <result property="examType"    column="exam_type"    />
+        <result property="examStatus"    column="exam_status"    />
+        <result property="candidateIds"    column="candidate_ids"    />
+        <result property="attendeeIds"    column="attendee_ids"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectExamsVo">
+        select exam_id, exam_name, start_time, end_time, paper_id, exam_type, exam_status, candidate_ids, attendee_ids, create_time from exams
+    </sql>
+
+    <select id="selectExamsList" parameterType="Exams" resultMap="ExamsResult">
+        <include refid="selectExamsVo"/>
+        <where>  
+            <if test="examName != null  and examName != ''"> and exam_name like concat('%', #{examName}, '%')</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="paperId != null "> and paper_id = #{paperId}</if>
+            <if test="examType != null  and examType != ''"> and exam_type = #{examType}</if>
+            <if test="examStatus != null "> and exam_status = #{examStatus}</if>
+            <if test="candidateIds != null  and candidateIds != ''"> and candidate_ids = #{candidateIds}</if>
+            <if test="attendeeIds != null  and attendeeIds != ''"> and attendee_ids = #{attendeeIds}</if>
+        </where>
+    </select>
+    
+    <select id="selectExamsByExamId" parameterType="Long" resultMap="ExamsResult">
+        <include refid="selectExamsVo"/>
+        where exam_id = #{examId}
+    </select>
+
+    <insert id="insertExams" parameterType="Exams" useGeneratedKeys="true" keyProperty="examId">
+        insert into exams
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="examName != null and examName != ''">exam_name,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="paperId != null">paper_id,</if>
+            <if test="examType != null and examType != ''">exam_type,</if>
+            <if test="examStatus != null">exam_status,</if>
+            <if test="candidateIds != null">candidate_ids,</if>
+            <if test="attendeeIds != null">attendee_ids,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="examName != null and examName != ''">#{examName},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="paperId != null">#{paperId},</if>
+            <if test="examType != null and examType != ''">#{examType},</if>
+            <if test="examStatus != null">#{examStatus},</if>
+            <if test="candidateIds != null">#{candidateIds},</if>
+            <if test="attendeeIds != null">#{attendeeIds},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateExams" parameterType="Exams">
+        update exams
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="examName != null and examName != ''">exam_name = #{examName},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="paperId != null">paper_id = #{paperId},</if>
+            <if test="examType != null and examType != ''">exam_type = #{examType},</if>
+            <if test="examStatus != null">exam_status = #{examStatus},</if>
+            <if test="candidateIds != null">candidate_ids = #{candidateIds},</if>
+            <if test="attendeeIds != null">attendee_ids = #{attendeeIds},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where exam_id = #{examId}
+    </update>
+
+    <delete id="deleteExamsByExamId" parameterType="Long">
+        delete from exams where exam_id = #{examId}
+    </delete>
+
+    <delete id="deleteExamsByExamIds" parameterType="String">
+        delete from exams where exam_id in 
+        <foreach item="examId" collection="array" open="(" separator="," close=")">
+            #{examId}
+        </foreach>
+    </delete>
+</mapper>

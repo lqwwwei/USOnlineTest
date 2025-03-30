@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.UserMapper">
+    <resultMap id="userWithRolesResultMap" type="com.ruoyi.system.domain.UserWithRoles">
+        <id property="userId" column="user_id"/>
+        <result property="nickName" column="nick_name"/>
+        <collection property="roles" ofType="com.ruoyi.system.domain.RoleInfo">
+            <result property="roleName" column="role_name"/>
+            <result property="roleKey" column="role_key"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectUsersWithRoles" resultMap="userWithRolesResultMap">
+        SELECT
+        u.user_id,
+        u.nick_name,
+        r.role_name,
+        r.role_key
+        FROM
+        sys_user u
+        LEFT JOIN sys_user_role ur ON u.user_id = ur.user_id
+        LEFT JOIN sys_role r ON ur.role_id = r.role_id
+        ORDER BY u.user_id
+    </select>
+</mapper>

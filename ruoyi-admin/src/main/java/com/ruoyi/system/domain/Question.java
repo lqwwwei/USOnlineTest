@@ -1,6 +1,5 @@
 package com.ruoyi.system.domain;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -128,12 +127,12 @@ public class Question extends BaseEntity
         return correctAnswer;
     }
 
-    public void setType(Long type) 
+    public void setType(Long type)
     {
         this.type = type;
     }
 
-    public Long getType() 
+    public Long getType()
     {
         return type;
     }
