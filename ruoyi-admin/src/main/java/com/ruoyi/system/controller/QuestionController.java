@@ -111,13 +111,14 @@ public class QuestionController extends BaseController
     ) {
         try {
             // 调用服务层方法，处理导入逻辑
-            System.out.println(666);
             questionService.importQuestions(file, knowledgeId,type);
             return success("导入成功");
         } catch (Exception e) {
             return error("导入失败：" + e.getMessage());
         }
     }
+
+    @PreAuthorize("@ss.hasPermi('system:question:Template')")
     @PostMapping("/importTemplate")
     public void importTemplate(HttpServletResponse response)
     {

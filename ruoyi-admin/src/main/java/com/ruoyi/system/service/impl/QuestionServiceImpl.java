@@ -109,8 +109,7 @@ public class QuestionServiceImpl implements IQuestionService
             for (Question question : questionList) {
                 if (question.getContent() == null || question.getOptionA() == null ||
                         question.getOptionB() == null || question.getOptionC() == null ||
-                        question.getOptionD() == null || question.getCorrectAnswer() == null ||
-                        question.getType() == null) {
+                        question.getOptionD() == null || question.getCorrectAnswer() == null ) {
                     throw new RuntimeException("Excel 文件数据不完整");
                 }
             }

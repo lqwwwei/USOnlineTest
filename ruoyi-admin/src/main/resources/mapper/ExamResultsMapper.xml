@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ExamResultsMapper">
+    
+    <resultMap type="ExamResults" id="ExamResultsResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="examId"    column="exam_id"    />
+        <result property="paperId"    column="paper_id"    />
+        <result property="totalScore"    column="total_score"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectExamResultsVo">
+        select id, user_id, user_name , exam_id, paper_id, total_score, create_time from exam_results
+    </sql>
+
+    <select id="selectExamResultsList" parameterType="ExamResults" resultMap="ExamResultsResult">
+        <include refid="selectExamResultsVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="examId != null "> and exam_id = #{examId}</if>
+            <if test="userName != null "> and user_name = #{userName}</if>
+            <if test="paperId != null "> and paper_id = #{paperId}</if>
+            <if test="totalScore != null "> and total_score = #{totalScore}</if>
+        </where>
+    </select>
+    
+    <select id="selectExamResultsById" parameterType="Long" resultMap="ExamResultsResult">
+        <include refid="selectExamResultsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertExamResults" parameterType="ExamResults" useGeneratedKeys="true" keyProperty="id">
+        insert into exam_results
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="examId != null">exam_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="paperId != null">paper_id,</if>
+            <if test="totalScore != null">total_score,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="examId != null">#{examId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="paperId != null">#{paperId},</if>
+            <if test="totalScore != null">#{totalScore},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateExamResults" parameterType="ExamResults">
+        update exam_results
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="examId != null">exam_id = #{examId},</if>
+            <if test="paperId != null">paper_id = #{paperId},</if>
+            <if test="totalScore != null">total_score = #{totalScore},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteExamResultsById" parameterType="Long">
+        delete from exam_results where id = #{id}
+    </delete>
+
+    <delete id="deleteExamResultsByIds" parameterType="String">
+        delete from exam_results where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 获取考试统计信息 -->
+    <select id="selectExamStatistics" resultType="com.ruoyi.system.domain.ExamStatistics">
+        SELECT
+        e.exam_name as examName,
+        e.exam_type as examType,
+        p.total_score as fullScore,
+        p.created_by as createBy,
+        (
+        SELECT COUNT(DISTINCT user_id)
+        FROM sys_user
+        WHERE FIND_IN_SET(user_id, REPLACE(e.candidate_ids, ' ', '')) > 0
+        ) as totalCandidates,
+        (
+        SELECT COUNT(DISTINCT er.user_id)
+        FROM exam_results er
+        WHERE er.exam_id = #{examId}
+        ) as actualCandidates,
+        AVG(er.total_score) as averageScore,
+        STDDEV(er.total_score) as standardDeviation,
+        MAX(er.total_score) as maxScore
+        FROM
+        exams e
+        LEFT JOIN exam_results er ON e.exam_id = er.exam_id
+        LEFT JOIN paper p ON e.paper_id = p.id
+        WHERE
+        e.exam_id = #{examId}
+        GROUP BY
+        e.exam_id, e.exam_name, e.exam_type, p.total_score
+    </select>
+
+    <!-- 动态分数段分布 -->
+    <select id="selectScoreDistribution" resultType="com.ruoyi.system.domain.ExamStatistics$ScoreRangeVo">
+        SELECT
+        CASE
+        WHEN er.total_score &lt; p.total_score * 0.6 THEN '不及格'
+        WHEN er.total_score &lt; p.total_score * 0.7 THEN '及格'
+        WHEN er.total_score &lt; p.total_score * 0.8 THEN '中等'
+        WHEN er.total_score &lt; p.total_score * 0.9 THEN '良好'
+        ELSE '优秀'
+        END as scoreRange, -- 更改别名以避免与保留字冲突
+        COUNT(*) as count,
+        CONCAT(ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM exam_results WHERE exam_id = #{examId}), 2), '%') as percentage
+        FROM
+        exam_results er
+        JOIN exams e ON er.exam_id = e.exam_id
+        JOIN paper p ON e.paper_id = p.id
+        WHERE
+        er.exam_id = #{examId}
+        GROUP BY
+        CASE
+        WHEN er.total_score &lt; p.total_score * 0.6 THEN '不及格'
+        WHEN er.total_score &lt; p.total_score * 0.7 THEN '及格'
+        WHEN er.total_score &lt; p.total_score * 0.8 THEN '中等'
+        WHEN er.total_score &lt; p.total_score * 0.9 THEN '良好'
+        ELSE '优秀'
+        END
+        ORDER BY
+        FIELD(scoreRange, '不及格', '及格', '中等', '良好', '优秀') -- 确保排序依据也更新为新的别名
+    </select>
+</mapper>

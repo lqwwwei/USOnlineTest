@@ -35,6 +35,9 @@ public class ExamScore extends BaseEntity
     @Excel(name = "考生答案")
     private String userAnswer;
 
+    @Excel(name = "正确答案")
+    private String answer;
+
     /** 考生得分 */
     @Excel(name = "考生得分")
     private BigDecimal score;
@@ -107,8 +110,17 @@ public class ExamScore extends BaseEntity
             .append("userId", getUserId())
             .append("questionId", getQuestionId())
             .append("userAnswer", getUserAnswer())
+                .append("answer", getAnswer())
             .append("score", getScore())
             .append("createTime", getCreateTime())
             .toString();
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 }

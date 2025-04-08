@@ -73,7 +73,7 @@ public class PaperController extends BaseController
     /**
      * 获取【请填写功能名称】详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:paper:query')")
+//    @PreAuthorize("@ss.hasPermi('system:paper:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {

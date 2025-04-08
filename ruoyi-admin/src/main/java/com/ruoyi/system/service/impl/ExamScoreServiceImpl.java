@@ -61,11 +61,11 @@ public class ExamScoreServiceImpl implements IExamScoreService
      * @param examScore 考试得分记录
      * @return 考试得分记录
      */
-    @Override
-    public List<ExamScore> selectExamScoreList(ExamScore examScore)
-    {
-        return examScoreMapper.selectExamScoreList(examScore);
-    }
+//    @Override
+//    public List<ExamScore> selectExamScoreList(ExamScore examScore)
+//    {
+//        return examScoreMapper.selectExamScoreList(examScore);
+//    }
 
     /**
      * 新增考试得分记录
@@ -267,6 +267,11 @@ public class ExamScoreServiceImpl implements IExamScoreService
         } catch (Exception e) {
             throw new RuntimeException("试卷规则解析失败: " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public List<ExamScore> selectExamScoreList(ExamScore examScore) {
+        return examScoreMapper.selectExamScoreList(examScore);
     }
 
 }

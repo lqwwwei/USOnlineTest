@@ -60,4 +60,6 @@ public interface IExamScoreService
     public int deleteExamScoreById(Long id);
 
     int saveOrUpdateExamScore(ExamScore examScore);
+
+
 }

@@ -1,5 +1,6 @@
 package com.ruoyi.system.mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 import com.ruoyi.system.domain.ExamScore;
 import org.apache.ibatis.annotations.Param;
@@ -63,4 +64,7 @@ public interface ExamScoreMapper
     ExamScore selectByUserAndQuestion(@Param("examId") Long examId,
                                       @Param("userId") Long userId,
                                       @Param("questionId") Long questionId);
+
+    public BigDecimal calculateTotalScoreByExamAndUser(@Param("examId") Long examId,
+                                                       @Param("userId") Long userId);
 }

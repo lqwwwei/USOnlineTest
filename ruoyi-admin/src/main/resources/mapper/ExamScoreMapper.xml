@@ -10,6 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="userId"    column="user_id"    />
         <result property="questionId"    column="question_id"    />
         <result property="userAnswer"    column="user_answer"    />
+        <result property="answer" column="answer"/>
         <result property="score"    column="score"    />
         <result property="createTime"    column="create_time"    />
     </resultMap>
@@ -19,14 +20,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectExamScoreList" parameterType="ExamScore" resultMap="ExamScoreResult">
-        <include refid="selectExamScoreVo"/>
-        <where>  
-            <if test="examId != null "> and exam_id = #{examId}</if>
-            <if test="userId != null "> and user_id = #{userId}</if>
-            <if test="questionId != null "> and question_id = #{questionId}</if>
-            <if test="userAnswer != null  and userAnswer != ''"> and user_answer = #{userAnswer}</if>
-            <if test="score != null "> and score = #{score}</if>
+        SELECT
+        es.id,
+        es.exam_id,
+        es.user_id,
+        es.question_id,
+        es.user_answer,
+        es.score,
+        es.create_time,
+        q.correct_answer AS answer
+        FROM exam_score es
+        LEFT JOIN question q ON es.question_id = q.id
+        <where>
+            <if test="examId != null"> AND es.exam_id = #{examId}</if>
+            <if test="userId != null"> AND es.user_id = #{userId}</if>
+            <if test="questionId != null"> AND es.question_id = #{questionId}</if>
         </where>
+        ORDER BY es.question_id ASC  <!-- 按题号排序 -->
     </select>
     
     <select id="selectExamScoreById" parameterType="Long" resultMap="ExamScoreResult">
@@ -85,4 +95,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="calculateTotalScoreByExamAndUser" resultType="java.math.BigDecimal">
+        SELECT COALESCE(SUM(score), 0)
+        FROM exam_score
+        WHERE exam_id = #{examId}
+        AND user_id = #{userId}
+    </select>
 </mapper>
